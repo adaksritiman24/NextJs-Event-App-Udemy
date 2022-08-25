@@ -1,9 +1,11 @@
 import React from "react";
-import { getFeaturedEvents } from "../dummy-data";
 import EventList from "../components/events/EventList";
+import { getFeaturedEvents } from "../helpers/apiUtils";
 
-const HomePage = () => {
-  const featuredEvents = getFeaturedEvents();
+const HomePage = (props) => {
+  // const featuredEvents = getFeaturedEvents();
+  const { events: featuredEvents } = props;
+
   return (
     <>
       <div>
@@ -11,6 +13,17 @@ const HomePage = () => {
       </div>
     </>
   );
+};
+
+export const getStaticProps = async (context) => {
+  const props = {
+    events: [],
+  };
+  props.events = await getFeaturedEvents();
+  return {
+    props,
+    revalidate : 1080,
+  };
 };
 
 export default HomePage;
