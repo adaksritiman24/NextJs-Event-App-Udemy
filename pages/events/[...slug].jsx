@@ -3,6 +3,7 @@ import React from "react";
 import EventList from "../../components/events/EventList";
 import Button from "../../components/ui/Button";
 import { getFilteredEvents } from "../../helpers/apiUtils";
+import Head from "next/head";
 
 export default function FilteredEventsPage({ invalidFilter, filteredEvents }) {
   // const router = useRouter();
@@ -12,9 +13,17 @@ export default function FilteredEventsPage({ invalidFilter, filteredEvents }) {
   //   return <p className="center">Loading...</p>;
   // }
 
+  const pageHeader = (
+    <Head>
+      <title>No Events Found</title>
+      <meta name="description" content="No Events found" />
+    </Head>
+  );
+
   if (invalidFilter) {
     return (
       <div className="center">
+        {pageHeader}
         <h3>Error 400: Bad Request</h3>
         <Button link="/events">Back To All Events</Button>
       </div>
@@ -24,6 +33,7 @@ export default function FilteredEventsPage({ invalidFilter, filteredEvents }) {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <div className="center">
+        {pageHeader}
         <h3>No Events Found!</h3>
         <Button link="/events">Back To All Events</Button>
       </div>
@@ -32,6 +42,9 @@ export default function FilteredEventsPage({ invalidFilter, filteredEvents }) {
 
   return (
     <div>
+      <Head>
+        <title>Filtered Events</title>
+      </Head>
       <EventList items={filteredEvents} />
     </div>
   );

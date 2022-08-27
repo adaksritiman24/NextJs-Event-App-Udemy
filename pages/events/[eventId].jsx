@@ -1,10 +1,15 @@
 import React from "react";
 // import { useRouter } from "next/router";
-import { getAllEvents, getEventById, getFeaturedEvents } from "../../helpers/apiUtils";
+import {
+  getAllEvents,
+  getEventById,
+  getFeaturedEvents,
+} from "../../helpers/apiUtils";
 import EventSummary from "../../components/eventDetails/EventSummary";
 import EventLogistics from "../../components/eventDetails/EventLogistics";
 import EventContent from "../../components/eventDetails/EventContent";
 import Button from "../../components/ui/Button";
+import Head from "next/head";
 
 export default function EventDetailsPage(props) {
   // const router = useRouter();
@@ -14,12 +19,25 @@ export default function EventDetailsPage(props) {
   if (!event)
     return (
       <div className="center">
+        
         <h3>Event dosen't Exists!</h3>
         <Button link="/events">Back To All Events</Button>
       </div>
     );
   return (
     <>
+      <Head>
+          <title>{event.title}</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+          <meta
+            name="description"
+            content="Find a lot of great events going around the world"
+          />
+          <meta name="keywords" content="events event" />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         {...{ ...event, address: event.location }}
@@ -39,9 +57,9 @@ export const getStaticProps = async (context) => {
 
   return {
     props: {
-      event,
+      event: event ? event : null,
     },
-    revalidate : 60,
+    revalidate: 60,
   };
 };
 

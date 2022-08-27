@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 import Button from "../ui/Button";
 import classes from "./EventItem.module.css";
@@ -15,7 +16,8 @@ export default function EventItem(props) {
 
   return (
     <li className={classes.item}>
-      <img src={"/" + image} alt="" width="100px" />
+      <Image src={"/" + image} alt="Image not found" width="240px" height="160px"/>
+      {/* <img src={"/" + image} alt="" width="100px" /> */}
       <div className={classes.content}>
         <div className={classes.summary}>
           <h2>{title}</h2>
