@@ -2,6 +2,7 @@ import React from "react";
 import EventList from "../components/events/EventList";
 import { getFeaturedEvents } from "../helpers/apiUtils";
 import Head from "next/head";
+import NewsletterRegistration from "../components/input/newsletter-registration";
 
 const HomePage = (props) => {
   // const featuredEvents = getFeaturedEvents();
@@ -22,6 +23,7 @@ const HomePage = (props) => {
           <meta name="keywords" content="events event" />
       </Head>
       <div>
+        <NewsletterRegistration/>
         <EventList items={featuredEvents} />
       </div>
     </>

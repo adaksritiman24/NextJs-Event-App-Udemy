@@ -10,6 +10,7 @@ import EventLogistics from "../../components/eventDetails/EventLogistics";
 import EventContent from "../../components/eventDetails/EventContent";
 import Button from "../../components/ui/Button";
 import Head from "next/head";
+import Comments from "../../components/input/comments";
 
 export default function EventDetailsPage(props) {
   // const router = useRouter();
@@ -46,6 +47,7 @@ export default function EventDetailsPage(props) {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments/>
     </>
   );
 }
