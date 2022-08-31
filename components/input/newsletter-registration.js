@@ -1,15 +1,17 @@
 import { useRef, useState } from "react";
+import LoadingPage from "../ui/LoadingPage";
 import classes from "./newsletter-registration.module.css";
 
 function NewsletterRegistration() {
   const emailRef = useRef(null);
   const [registrationError, setRegistrationError] = useState(false);
   const [registrationSucccess, setRegistrationSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleEmailInputChange = ()=>{
+  const handleEmailInputChange = () => {
     setRegistrationError(false);
     setRegistrationSuccess(false);
-  }
+  };
 
   function registrationHandler(event) {
     event.preventDefault();
@@ -21,7 +23,10 @@ function NewsletterRegistration() {
     // send valid data to API
 
     const email = emailRef.current.value;
-    if(email === "") return setRegistrationError(true);
+    if (email === "") {
+      setLoading(false);
+      return setRegistrationError(true);
+    }
 
     fetch("/api/newsletter-registration", {
       body: JSON.stringify({
@@ -33,18 +38,18 @@ function NewsletterRegistration() {
       },
     })
       .then((response) => {
-        if(response.status !== 201)
+        if (response.status !== 201)
           throw new Error("something wrong happened");
-        return response.json()
+        return response.json();
       })
       .then((data) => {
         emailRef.current.value = "";
         setRegistrationSuccess(true);
-
       })
-      .catch((error)=>{
+      .catch((error) => {
         setRegistrationError(true);
-      });
+      })
+      .finally(()=>setLoading(false));
   }
 
   return (
@@ -59,13 +64,19 @@ function NewsletterRegistration() {
             name="email"
             ref={emailRef}
             onChange={handleEmailInputChange}
-            
           />
-          <button>Register</button>
+          <button onClick={() => setLoading(true)}>Register</button>
         </div>
       </form>
-      {registrationError && <div className={classes.error}>Something Went Wrong! Do ensure correct email format</div>}
-      {registrationSucccess && <div className={classes.success}>Registration Successfull!</div>}
+      {registrationError && (
+        <div className={classes.error}>
+          Something Went Wrong! Do ensure correct email format
+        </div>
+      )}
+      {registrationSucccess && (
+        <div className={classes.success}>Registration Successfull!</div>
+      )}
+      {loading && <LoadingPage />}
     </section>
   );
 }

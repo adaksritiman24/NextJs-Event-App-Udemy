@@ -3,25 +3,30 @@ import { useState, useEffect } from "react";
 import CommentList from "./comment-list";
 import NewComment from "./new-comment";
 import classes from "./comments.module.css";
+import LoadingPage from "../ui/LoadingPage";
 
 function Comments(props) {
+  const { id: eventId } = props;
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
   const getAllComments = () => {
-    fetch("/api/comments")
+    setLoading(true);
+    fetch("/api/comments/" + eventId)
       .then((response) => response.json())
       .then((data) => setComments(data))
-      .catch((error) => setComments([]));
+      .catch((error) => setComments([]))
+      .finally(() => setLoading(false));
   };
 
   function addCommentHandler(commentData, clearAllInputs) {
     // send data to API
-    fetch("/api/comments", {
+    fetch("/api/comments/" + eventId, {
       method: "POST",
       body: JSON.stringify(commentData),
       headers: {
@@ -36,8 +41,8 @@ function Comments(props) {
       .catch(console.log);
   }
   useEffect(() => {
-    getAllComments();
-  }, []);
+    if (showComments) getAllComments();
+  }, [showComments]);
   return (
     <section className={classes.comments}>
       <button onClick={toggleCommentsHandler}>
@@ -45,6 +50,7 @@ function Comments(props) {
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
       {showComments && <CommentList comments={comments} />}
+      {loading && <LoadingPage />}
     </section>
   );
 }
