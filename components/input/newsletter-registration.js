@@ -1,22 +1,52 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import NotificationContext from "../../store/notifiactionContext";
 import LoadingPage from "../ui/LoadingPage";
 import classes from "./newsletter-registration.module.css";
 
 function NewsletterRegistration() {
   const emailRef = useRef(null);
-  const [registrationError, setRegistrationError] = useState(false);
-  const [registrationSucccess, setRegistrationSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const {showNotification, hideNotification} = useContext(NotificationContext);
+
+  const removeNotificationAfter = ()=>{
+    setTimeout(()=>{
+      console.log("Hiding notification...");
+      hideNotification();
+    }, 3000)
+  }
+
+  const setRegistrationError = ()=> {
+    showNotification({
+      title : "Error",
+      message : "Registration failed!",
+      status : "error"
+    })
+  }
+  
+  const setRegistrationSuccess = ()=> {
+    showNotification({
+      title : "Success",
+      message : "Registration was successfull!",
+      status : "success"
+    })
+  }
+
+  const setRegistrationPending = ()=> {
+    showNotification({
+      title : "Pending",
+      message : "Please Wait",
+      status : "pending"
+    })
+  }
+
   const handleEmailInputChange = () => {
-    setRegistrationError(false);
-    setRegistrationSuccess(false);
+    
   };
 
   function registrationHandler(event) {
     event.preventDefault();
-    setRegistrationError(false);
-    setRegistrationSuccess(false);
+    setRegistrationPending();
 
     // fetch user input (state or refs)
     // optional: validate input
@@ -25,7 +55,9 @@ function NewsletterRegistration() {
     const email = emailRef.current.value;
     if (email === "") {
       setLoading(false);
-      return setRegistrationError(true);
+      setRegistrationError();
+      removeNotificationAfter();
+      return;
     }
 
     fetch("/api/newsletter-registration", {
@@ -44,10 +76,12 @@ function NewsletterRegistration() {
       })
       .then((data) => {
         emailRef.current.value = "";
-        setRegistrationSuccess(true);
+        setRegistrationSuccess();
+        removeNotificationAfter()
       })
       .catch((error) => {
-        setRegistrationError(true);
+        setRegistrationError();
+        removeNotificationAfter()
       })
       .finally(()=>setLoading(false));
   }
@@ -68,14 +102,7 @@ function NewsletterRegistration() {
           <button onClick={() => setLoading(true)}>Register</button>
         </div>
       </form>
-      {registrationError && (
-        <div className={classes.error}>
-          Something Went Wrong! Do ensure correct email format
-        </div>
-      )}
-      {registrationSucccess && (
-        <div className={classes.success}>Registration Successfull!</div>
-      )}
+      
       {loading && <LoadingPage />}
     </section>
   );

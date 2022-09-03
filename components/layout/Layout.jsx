@@ -1,4 +1,5 @@
 import React from "react";
+import Notification from "../ui/Notification";
 import MainHeader from "./MainHeader";
 
 export default function LayoutComponent(props) {
@@ -6,6 +7,7 @@ export default function LayoutComponent(props) {
     <>
       <MainHeader />
       <main>{props.children}</main>
+      <Notification title="test" message="hi" status="error"/>
     </>
   );
 }

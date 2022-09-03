@@ -26,8 +26,6 @@ const handler = async (req, res) => {
       name,
       text,
     };
-    console.log(newComment);
-
 
     try{
         const result = await insertDocument(client, "comments", newComment);
