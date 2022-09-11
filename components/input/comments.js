@@ -3,7 +3,6 @@ import { useState, useEffect, useContext } from "react";
 import CommentList from "./comment-list";
 import NewComment from "./new-comment";
 import classes from "./comments.module.css";
-import LoadingPage from "../ui/LoadingPage";
 import NotificationContext from "../../store/notifiactionContext";
 
 function Comments(props) {
@@ -42,8 +41,8 @@ function Comments(props) {
   };
 
   const getAllComments = () => {
+    setComments([])
     setLoading(true);
-    setNotificationPending("Loading Comments...");
     fetch("/api/comments/" + eventId)
       .then((response) => {
         if (response.status !== 200) {
@@ -98,7 +97,11 @@ function Comments(props) {
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
       {showComments && <CommentList comments={comments} />}
-      {loading && <LoadingPage />}
+      {loading && 
+      <div>
+         Loading comments ...
+      </div>
+      }
     </section>
   );
 }
